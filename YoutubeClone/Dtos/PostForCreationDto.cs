@@ -8,8 +8,10 @@ namespace YoutubeClone.Dtos
         public string VideoUrl { get; set; }
 
         [Required]
+        public string PostTitle { get; set; }
+
+        [Required]
         public int UserId { get; set; }
 
-        public int Likes { get; set; }
     }
 }

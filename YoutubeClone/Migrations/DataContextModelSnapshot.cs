@@ -34,14 +34,22 @@ namespace YoutubeClone.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("CommentId");
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("CommentModels", (string)null);
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CommentModels");
                 });
 
             modelBuilder.Entity("YoutubeClone.Models.PostModel", b =>
@@ -52,11 +60,15 @@ namespace YoutubeClone.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PostId"));
 
-                    b.Property<DateTime?>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Likes")
                         .HasColumnType("int");
+
+                    b.Property<string>("PostTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -69,7 +81,7 @@ namespace YoutubeClone.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PostModels", (string)null);
+                    b.ToTable("PostModels");
                 });
 
             modelBuilder.Entity("YoutubeClone.Models.UserModel", b =>
@@ -79,6 +91,10 @@ namespace YoutubeClone.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -98,7 +114,7 @@ namespace YoutubeClone.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("UserModels", (string)null);
+                    b.ToTable("UserModels");
                 });
 
             modelBuilder.Entity("YoutubeClone.Models.CommentModel", b =>
@@ -106,10 +122,18 @@ namespace YoutubeClone.Migrations
                     b.HasOne("YoutubeClone.Models.PostModel", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("YoutubeClone.Models.UserModel", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Post");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("YoutubeClone.Models.PostModel", b =>
@@ -130,6 +154,8 @@ namespace YoutubeClone.Migrations
 
             modelBuilder.Entity("YoutubeClone.Models.UserModel", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618

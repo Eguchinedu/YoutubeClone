@@ -15,6 +15,10 @@ namespace YoutubeClone.Models
 
         public string Password { get; set; }
 
+        public string Email { get; set; }
+
         public ICollection<PostModel> Posts { get; set; } = new List<PostModel>();
+
+        public ICollection<CommentModel> Comments { get; set; } = new List<CommentModel>();
     }
 }

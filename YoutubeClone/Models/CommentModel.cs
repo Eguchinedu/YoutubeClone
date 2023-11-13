@@ -10,11 +10,18 @@ namespace YoutubeClone.Models
 
         public string Comment { get; set; }
 
-        [ForeignKey("PostId")]
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+
         public int PostId { get; set; }
 
         public PostModel Post { get; set; }
 
+
+        
+        public int UserId { get; set; }
+
+        public UserModel User { get; set; }
 
     }
 }

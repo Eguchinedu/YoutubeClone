@@ -5,24 +5,25 @@
 namespace YoutubeClone.Migrations
 {
     /// <inheritdoc />
-    public partial class postUpdate : Migration
+    public partial class PostModelUpdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "Id",
+            migrationBuilder.AddColumn<string>(
+                name: "PostTitle",
                 table: "PostModels",
-                newName: "PostId");
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "PostId",
-                table: "PostModels",
-                newName: "Id");
+            migrationBuilder.DropColumn(
+                name: "PostTitle",
+                table: "PostModels");
         }
     }
 }
