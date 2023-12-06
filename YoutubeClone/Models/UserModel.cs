@@ -20,5 +20,8 @@ namespace YoutubeClone.Models
         public ICollection<PostModel> Posts { get; set; } = new List<PostModel>();
 
         public ICollection<CommentModel> Comments { get; set; } = new List<CommentModel>();
+
+        
+        public List<PostLike> LikedPosts { get; set; } = new List<PostLike>();
     }
 }

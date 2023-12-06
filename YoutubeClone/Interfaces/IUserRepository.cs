@@ -4,17 +4,17 @@ namespace YoutubeClone.Interfaces
 {
     public interface IUserRepository
     {
-        ICollection<UserModel> GetUsers();
+        Task <ICollection<UserModel>> GetUsers();
 
-        UserModel GetUser(int id);
+        Task<UserModel> GetUser(int id);
 
-        UserModel GetUserByName(string userName);
+        Task<UserModel> GetUserByName(string userName);
 
-        bool UserExists(int id);
+        Task<bool> UserExists(int id);
 
-        bool AddUser(UserModel user);
+        Task <bool> AddUser(UserModel user);
 
-        bool ChangePassword(UserModel user, string Password);
+        Task <bool> ChangePassword(UserModel user, string Password);
 
         bool Save();
     }

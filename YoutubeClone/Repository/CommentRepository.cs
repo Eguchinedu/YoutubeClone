@@ -1,4 +1,5 @@
-﻿using YoutubeClone.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using YoutubeClone.Data;
 using YoutubeClone.Interfaces;
 using YoutubeClone.Models;
 
@@ -13,22 +14,29 @@ namespace YoutubeClone.Repository
             _context = context;
         }
 
-        public bool AddCommentToPost(CommentModel comment)
+        public async Task<bool> AddCommentToPostAsync(CommentModel comment)
         {
             _context.CommentModels.Add(comment);
 
-            return Save();
+           return await SaveAsync();
+           
         }
 
-        public ICollection<CommentModel> GetCommentForPost(int postId)
+        public async Task<ICollection<CommentModel>> GetCommentForPostAsync(int postId)
         {
-            return _context.CommentModels.Where(p => p.PostId == postId).ToList(); ;
+            
+            return await _context.CommentModels.Where(p => p.PostId == postId).ToListAsync();
         }
 
-        public bool Save()
+        public async Task<bool> SaveAsync()
         {
-            var saved = _context.SaveChanges();
-            return saved > 0 ? true : false;
+            // Use SaveChangesAsync for asynchronous saving
+            var saved = await _context.SaveChangesAsync();
+            return saved > 0;
+        }
+        public async Task<CommentModel> GetCommentByIdAsync(int commentId)
+        {
+            return await _context.CommentModels.FirstOrDefaultAsync(c => c.CommentId == commentId);
         }
     }
 }

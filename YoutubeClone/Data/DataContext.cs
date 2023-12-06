@@ -20,6 +20,9 @@ namespace YoutubeClone.Data
 
         public DbSet<CommentModel> CommentModels { get; set; }
 
+        public DbSet<PostLike> PostLikes { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // User-Post relationship
@@ -42,6 +45,22 @@ namespace YoutubeClone.Data
                 .WithOne(c => c.Post)
                 .HasForeignKey(c => c.PostId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<PostLike>()
+       .HasKey(pl => new { pl.PostId, pl.UserId });
+
+            modelBuilder.Entity<PostLike>()
+       .HasOne(pl => pl.Post)
+       .WithMany(p => p.PostLikes)
+       .HasForeignKey(pl => pl.PostId)
+       .OnDelete(DeleteBehavior.Restrict); 
+
+            modelBuilder.Entity<PostLike>()
+                .HasOne(pl => pl.User)
+                .WithMany(u => u.LikedPosts)
+                .HasForeignKey(pl => pl.UserId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
 
         }
 

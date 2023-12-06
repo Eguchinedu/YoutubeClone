@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace YoutubeClone.Models
 {
@@ -16,9 +17,12 @@ namespace YoutubeClone.Models
 
 
         public int UserId { get; set; }
+
         public UserModel User { get; set; }
 
         public int Likes { get; set; }
+
+        public List<PostLike> PostLikes { get; set; } = new List<PostLike>();
 
         public ICollection<CommentModel> Comments { get; set; } = new List<CommentModel>();
     }

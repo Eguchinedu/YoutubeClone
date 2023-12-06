@@ -1,4 +1,5 @@
-﻿using YoutubeClone.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using YoutubeClone.Data;
 using YoutubeClone.Interfaces;
 using YoutubeClone.Models;
 
@@ -9,49 +10,49 @@ namespace YoutubeClone.Repository
         private readonly DataContext _context;
         private readonly IPasswordHasher _passwordHasher;
 
-        public UserRepository(DataContext context, IPasswordHasher passwordHasher)
+        public  UserRepository(DataContext context, IPasswordHasher passwordHasher)
         {
             _context = context;
             _passwordHasher = passwordHasher;
         }
-        public bool AddUser(UserModel user)
+        public async  Task<bool> AddUser(UserModel user)
         {
-            _context.UserModels.Add(user);
+            await _context.UserModels.AddAsync(user);
 
             return Save();
         }
-        public bool UserExists(int id)
+        public async Task<bool> UserExists(int id)
         {
-            return _context.UserModels.Any(p => p.UserId == id);
+            return await _context.UserModels.AnyAsync(p => p.UserId == id);
         }
-        public UserModel GetUser(int id)
+        public async Task<UserModel> GetUser(int id)
         {
 
-            return _context.UserModels.Where(p => p.UserId == id).FirstOrDefault();
+            return await _context.UserModels.Include(p => p.Posts).Where(p => p.UserId == id).FirstOrDefaultAsync();
         }
 
-        public ICollection<UserModel> GetUsers()
+        public async Task<ICollection<UserModel>> GetUsers()
         {
-            return _context.UserModels.OrderBy(x => x.UserId).ToList();
+            return await _context.UserModels.OrderBy(x => x.UserId).ToListAsync();
         }
 
         public bool Save()
         {
-            var saved = _context.SaveChanges();
-            return saved > 0 ? true : false;
+            var saved =  _context.SaveChanges();
+            return   saved > 0 ? true : false;
         }
 
 
-        public bool ChangePassword(UserModel user, string newPassword)
+        public async Task<bool> ChangePassword(UserModel user, string newPassword)
         {
             user.Password = _passwordHasher.Hash(newPassword);
-            _context.Update(user);
+             _context.Update(user);
             return Save();
         }
 
-        public UserModel GetUserByName(string userName)
+        public async Task<UserModel> GetUserByName(string userName)
         {
-            return _context.UserModels.Where(p => p.UserName == userName).FirstOrDefault();
+            return await _context.UserModels.Where(p => p.UserName == userName).FirstOrDefaultAsync();
         }
 
 

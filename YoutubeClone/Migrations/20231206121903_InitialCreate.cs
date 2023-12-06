@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace YoutubeClone.Migrations
 {
     /// <inheritdoc />
-    public partial class initialcreate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,6 +34,7 @@ namespace YoutubeClone.Migrations
                 {
                     PostId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    PostTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     VideoUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
@@ -78,6 +79,30 @@ namespace YoutubeClone.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PostLikes",
+                columns: table => new
+                {
+                    PostId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostLikes", x => new { x.PostId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_PostLikes_PostModels_PostId",
+                        column: x => x.PostId,
+                        principalTable: "PostModels",
+                        principalColumn: "PostId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PostLikes_UserModels_UserId",
+                        column: x => x.UserId,
+                        principalTable: "UserModels",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_CommentModels_PostId",
                 table: "CommentModels",
@@ -86,6 +111,11 @@ namespace YoutubeClone.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CommentModels_UserId",
                 table: "CommentModels",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostLikes_UserId",
+                table: "PostLikes",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -99,6 +129,9 @@ namespace YoutubeClone.Migrations
         {
             migrationBuilder.DropTable(
                 name: "CommentModels");
+
+            migrationBuilder.DropTable(
+                name: "PostLikes");
 
             migrationBuilder.DropTable(
                 name: "PostModels");

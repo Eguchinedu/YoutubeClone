@@ -52,6 +52,21 @@ namespace YoutubeClone.Migrations
                     b.ToTable("CommentModels");
                 });
 
+            modelBuilder.Entity("YoutubeClone.Models.PostLike", b =>
+                {
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PostId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PostLikes");
+                });
+
             modelBuilder.Entity("YoutubeClone.Models.PostModel", b =>
                 {
                     b.Property<int>("PostId")
@@ -136,6 +151,25 @@ namespace YoutubeClone.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("YoutubeClone.Models.PostLike", b =>
+                {
+                    b.HasOne("YoutubeClone.Models.PostModel", "Post")
+                        .WithMany("PostLikes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("YoutubeClone.Models.UserModel", "User")
+                        .WithMany("LikedPosts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("YoutubeClone.Models.PostModel", b =>
                 {
                     b.HasOne("YoutubeClone.Models.UserModel", "User")
@@ -150,11 +184,15 @@ namespace YoutubeClone.Migrations
             modelBuilder.Entity("YoutubeClone.Models.PostModel", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("PostLikes");
                 });
 
             modelBuilder.Entity("YoutubeClone.Models.UserModel", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("LikedPosts");
 
                     b.Navigation("Posts");
                 });

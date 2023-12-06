@@ -1,4 +1,5 @@
-﻿using YoutubeClone.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using YoutubeClone.Data;
 using YoutubeClone.Interfaces;
 using YoutubeClone.Models;
 
@@ -13,55 +14,78 @@ namespace YoutubeClone.Repository
             _context = context;
 
         }
-        public bool CreatePost(PostModel post)
-        {
-            _context.PostModels.Add(post);
 
-            return Save();
+        public async Task<bool> AddLikeToPost(PostLike postLike)
+        {
+             await _context.PostLikes.AddAsync(postLike);
+
+            return await SaveAsync();
         }
 
-        public bool DeletePost(PostModel id)
+        public async Task<bool> CreatePostAsync(PostModel post)
         {
-            _context.PostModels.Remove(id);
-
-            return Save();
+            await _context.PostModels.AddAsync(post);
+            return await SaveAsync();
         }
 
-     
-
-        public PostModel GetPostById(int postId)
+        public async Task<bool> DeletePostAsync(int postId)
         {
-            return _context.PostModels.Where(p => p.PostId == postId).FirstOrDefault();
-        }
+            var post = await _context.PostModels.FindAsync(postId);
+            if (post == null)
+            {
+                return false; // Post not found
+            }
 
-        public PostModel GetPostForUser(int userId, int postId)
-        {
-            return _context.PostModels.Where(p => p.UserId == userId && p.PostId == postId).FirstOrDefault();
-        }
-
-        public ICollection<PostModel> GetPosts(int userId)
-        {
-            return _context.PostModels.Where(p => p.UserId == userId).ToList();
-        }
-
-        public bool PostExists(int id)
-        {
-           return _context.PostModels.Any(p => p.PostId == id);
+            _context.PostModels.Remove(post);
+            return await SaveAsync();
         }
 
         
 
-        public bool Save()
+        public async Task<PostModel> GetPostByIdAsync(int postId)
         {
-            var saved = _context.SaveChanges();
-            return saved > 0 ? true : false;
+            return await _context.PostModels.Where(p => p.PostId == postId).FirstOrDefaultAsync();
         }
 
-        public bool UpdatePost(PostModel post)
+
+
+        public async Task<ICollection<PostModel>> GetPostForAllUsersAsync()
+        {
+            return await _context.PostModels.ToListAsync();
+        }
+
+        public async Task<PostModel> GetPostForUserAsync(int userId, int postId)
+        {
+            return await _context.PostModels
+                .Include(p => p.Comments).Include(p => p.PostLikes)
+                .Where(p => p.UserId == userId && p.PostId == postId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<ICollection<PostModel>> GetPostsAsync(int userId)
+        {
+            return await _context.PostModels.Where(p => p.UserId == userId).ToListAsync();
+        }
+
+        public async Task<bool> PostExistsAsync(int postId)
+        {
+            return await _context.PostModels.AnyAsync(p => p.PostId == postId);
+        }
+
+        public async Task<bool> SaveAsync()
+        {
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> UpdatePostAsync(PostModel post)
         {
             _context.PostModels.Update(post);
+            return await SaveAsync();
+        }
 
-            return Save();
+        public async Task<bool> UserLikedPost(int userId, int postId)
+        {
+            return await _context.PostLikes.AnyAsync(p => p.UserId == userId && p.PostId == postId);
         }
     }
 }

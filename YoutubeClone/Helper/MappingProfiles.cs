@@ -16,6 +16,10 @@ namespace YoutubeClone.Helper
 
             CreateMap<UserForCreationDto, UserModel>();
 
+            CreateMap<UserModel, UserWithPostDto>();
+
+            CreateMap<UserWithPostDto, UserModel>();
+
 
             //Posts Mapper
 
@@ -26,6 +30,16 @@ namespace YoutubeClone.Helper
             CreateMap<PostModel, PostForCreationDto>();
 
             CreateMap<PostForCreationDto, PostModel>();
+
+            CreateMap<PostForDisplayDto, PostModel>();
+
+            CreateMap<PostModel, PostForDisplayDto>();
+
+            CreateMap<PostForDisplayDto, PostForDisplayDto>();
+
+            CreateMap<PostLike, UserLikeDto>();
+
+            CreateMap<UserLikeDto, PostLike>();
 
             //Comment mapper
 

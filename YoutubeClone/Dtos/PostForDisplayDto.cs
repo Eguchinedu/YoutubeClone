@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using YoutubeClone.Models;
 
 namespace YoutubeClone.Dtos
 {
-    public class PostDto
+    public class PostForDisplayDto
     {
         [Key]
         public int PostId { get; set; }
@@ -11,10 +10,6 @@ namespace YoutubeClone.Dtos
         public string VideoUrl { get; set; }
         public DateTime CreatedAt { get; set; }
         public int UserId { get; set; }
-        public UserDto User { get; set; }
         public int Likes { get; set; }
-
-        public List<UserLikeDto> PostLikes { get; set; } = new List<UserLikeDto>();
-        public List<CommentDto> Comments { get; set; } = new List<CommentDto>();
     }
 }

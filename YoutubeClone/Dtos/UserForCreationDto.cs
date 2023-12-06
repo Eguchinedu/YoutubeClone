@@ -19,7 +19,7 @@ namespace YoutubeClone.Dtos
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Email is Required")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage ="Please enter a valid email")]
         public string Email { get; set; }
     }
 }

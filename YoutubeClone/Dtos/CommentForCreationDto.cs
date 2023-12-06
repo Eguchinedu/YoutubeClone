@@ -6,8 +6,8 @@ namespace YoutubeClone.Dtos
 {
     public class CommentForCreationDto
     {
-
-
+        
+        
         [Required]
         public string Comment { get; set; }
 

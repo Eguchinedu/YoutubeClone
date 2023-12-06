@@ -4,10 +4,9 @@ namespace YoutubeClone.Interfaces
 {
     public interface ICommentRepository
     {
-        bool AddCommentToPost( CommentModel comment);
-
-        ICollection<CommentModel> GetCommentForPost( int postId );
-
-        bool Save();
+        Task<bool> AddCommentToPostAsync(CommentModel comment);
+        Task<ICollection<CommentModel>> GetCommentForPostAsync(int postId);
+        Task<bool> SaveAsync();
+        Task<CommentModel> GetCommentByIdAsync(int commentId);
     }
 }
